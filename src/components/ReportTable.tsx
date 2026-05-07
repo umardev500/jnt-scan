@@ -16,40 +16,35 @@ interface Props {
 const columnHelper = createColumnHelper<RecordItem>();
 
 export default function ReportTable({ data }: Props) {
-  // ✅ Controlled sorting with default ascending on plannedDepartureTime
   const [sorting, setSorting] = useState<SortingState>([
     { id: "plannedDepartureTime", desc: false },
   ]);
 
   const columns = useMemo(
     () => [
-      // NUMBERING COLUMN
+      // NUMBERING COLUMN - NOT SORTABLE, COUNTER GENERATED IN RENDER
       {
         id: "rowNumber",
         header: "No",
-        cell: (info: any) => info.row.index + 1,
+        enableSorting: false,
+        cell: (_info, rowIndex: number) => rowIndex + 1,
       },
-
       columnHelper.accessor("shipmentNo", {
         header: "Shipment No",
         cell: (info) => info.getValue(),
       }),
-
       columnHelper.accessor("driverName", {
         header: "Driver",
         cell: (info) => info.getValue(),
       }),
-
       columnHelper.accessor("plateNumber", {
         header: "Plate Number",
         cell: (info) => info.getValue(),
       }),
-
       columnHelper.accessor("arriveNetworkCode", {
         header: "Destination",
         cell: (info) => info.getValue() || "-",
       }),
-
       columnHelper.accessor("plannedDepartureTime", {
         header: "Planned Departure",
         cell: (info) =>
@@ -57,8 +52,6 @@ export default function ReportTable({ data }: Props) {
             ? new Date(info.getValue()).toLocaleString()
             : "-",
       }),
-
-      // App Departure
       columnHelper.accessor("appTrackDepartureTime", {
         id: "appDepartureTime",
         header: "App Departure",
@@ -73,8 +66,6 @@ export default function ReportTable({ data }: Props) {
           return new Date(value).toLocaleString();
         },
       }),
-
-      // Scan Time
       columnHelper.accessor("appTrackDepartureTime", {
         id: "scanTime",
         header: "Scan Time",
@@ -90,7 +81,7 @@ export default function ReportTable({ data }: Props) {
         },
       }),
     ],
-    [data]
+    []
   );
 
   const table = useReactTable({
@@ -104,37 +95,38 @@ export default function ReportTable({ data }: Props) {
 
   const getUpColor = (state: false | "asc" | "desc") =>
     state === "asc" ? "text-blue-600" : "text-gray-300";
-
   const getDownColor = (state: false | "asc" | "desc") =>
     state === "desc" ? "text-blue-600" : "text-gray-300";
 
   return (
     <div className="overflow-x-auto border border-gray-300 bg-white">
       <table className="min-w-full table-auto border-collapse">
-        {/* HEADER */}
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map((hg) => (
             <tr key={hg.id}>
               {hg.headers.map((header) => {
                 const sortState = header.column.getIsSorted();
-
+                const isNumberCol = header.id === "rowNumber";
                 return (
                   <th
                     key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    className="cursor-pointer select-none border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700"
+                    onClick={
+                      header.column.getCanSort()
+                        ? header.column.getToggleSortingHandler()
+                        : undefined
+                    }
+                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 ${
+                      header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
+                    } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""}`}
                   >
                     <div className="flex items-center gap-2">
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getCanSort() && (
+                        <span className="flex flex-col text-[10px] leading-none">
+                          <span className={getUpColor(sortState as any)}>▲</span>
+                          <span className={getDownColor(sortState as any)}>▼</span>
+                        </span>
                       )}
-
-                      {/* SORT ICON */}
-                      <span className="flex flex-col text-[10px] leading-none">
-                        <span className={getUpColor(sortState as any)}>▲</span>
-                        <span className={getDownColor(sortState as any)}>▼</span>
-                      </span>
                     </div>
                   </th>
                 );
@@ -142,28 +134,22 @@ export default function ReportTable({ data }: Props) {
             </tr>
           ))}
         </thead>
-
-        {/* BODY */}
         <tbody>
-          {table.getRowModel().rows.map((row, index) => (
+          {table.getRowModel().rows.map((row, idx) => (
             <tr
               key={row.id}
-              className={`
-                border border-gray-200
-                transition-colors duration-150
-                hover:bg-gray-100
-                ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              `}
+              className="border border-gray-200 transition-colors duration-150 hover:bg-gray-100"
             >
-              {row.getVisibleCells().map((cell) => (
+              {row.getVisibleCells().map((cell, cellIndex) => (
                 <td
                   key={cell.id}
-                  className="border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap"
+                  className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${
+                    cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
+                  }`}
                 >
-                  {flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
+                  {cell.column.id === "rowNumber"
+                    ? idx + 1 // COUNTER OUTSIDE DATA
+                    : flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
             </tr>
