@@ -15,7 +15,7 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Load from localStorage on startup
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
+    if (saved && apiUrl == "") {
       setApiUrlState(saved);
     }
   }, []);
