@@ -115,6 +115,20 @@ export default function ReportPage() {
           <div className="border-b border-gray-200 p-4">
             <div className="flex flex-wrap gap-4">
 
+              <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                  Shipment Name
+                </label>
+                <input
+                  type="text"
+                  name="shipmentName"
+                  value={filters.shipmentName || ""}
+                  onChange={handleChange}
+                  placeholder="Enter shipment name"
+                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                />
+              </div>
+
               {/* Shipment State */}
               <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
                 <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
@@ -142,7 +156,7 @@ export default function ReportPage() {
                   value={filters.startTime}
                   onChange={handleChange}
                   className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
-                  style={{minWidth: "195px"}}
+                  style={{ minWidth: "195px" }}
                 />
               </div>
 
@@ -157,7 +171,7 @@ export default function ReportPage() {
                   value={filters.endTime}
                   onChange={handleChange}
                   className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
-                  style={{minWidth: "195px"}}
+                  style={{ minWidth: "195px" }}
                 />
               </div>
 

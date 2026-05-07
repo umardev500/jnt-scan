@@ -29,6 +29,7 @@ export const useReport = (filters: ReportFilter) => {
         startTime: params.startTime,
         endTime: params.endTime,
         countryId: "1",
+        shipmentName: params.shipmentName,
       };
 
       const response = await getReports(payload, apiUrl);
