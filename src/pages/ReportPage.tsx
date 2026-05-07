@@ -64,17 +64,7 @@ export default function ReportPage() {
     });
   };
 
-  // =========================
-  // Prevent render if API URL not ready
-  // =========================
-  if (!apiUrl) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500 text-sm">
-        Waiting for API configuration...
-      </div>
-    );
-  }
-
+  
   return (
     <div className="min-h-screen bg-gray-50">
 
