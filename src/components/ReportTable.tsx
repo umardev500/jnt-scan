@@ -16,7 +16,10 @@ interface Props {
 const columnHelper = createColumnHelper<RecordItem>();
 
 export default function ReportTable({ data }: Props) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  // ✅ Controlled sorting with default ascending on plannedDepartureTime
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "plannedDepartureTime", desc: false },
+  ]);
 
   const columns = useMemo(
     () => [
