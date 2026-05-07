@@ -20,13 +20,13 @@ export default function ReportTable({ data }: Props) {
 
   const columns = useMemo(
     () => [
-      // ✅ NUMBERING COLUMN
+      // NUMBERING COLUMN
       {
         id: "rowNumber",
         header: "No",
         cell: (info: any) => info.row.index + 1,
       },
-      
+
       columnHelper.accessor("shipmentNo", {
         header: "Shipment No",
         cell: (info) => info.getValue(),
@@ -50,27 +50,39 @@ export default function ReportTable({ data }: Props) {
       columnHelper.accessor("plannedDepartureTime", {
         header: "Planned Departure",
         cell: (info) =>
-          new Date(info.getValue()).toLocaleString(),
+          info.getValue()
+            ? new Date(info.getValue()).toLocaleString()
+            : "-",
       }),
 
-      // ✅ App Departure
+      // App Departure
       columnHelper.accessor("appTrackDepartureTime", {
-        id: "appDepartureTime", // IMPORTANT: unique ID
+        id: "appDepartureTime",
         header: "App Departure",
         cell: (info) => {
           const value = info.getValue();
-          if (!value) return "-";
+          if (!value)
+            return (
+              <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
+                - -
+              </span>
+            );
           return new Date(value).toLocaleString();
         },
       }),
 
-      // ✅ Scan Time (same field, different column identity)
+      // Scan Time
       columnHelper.accessor("appTrackDepartureTime", {
-        id: "scanTime", // IMPORTANT: unique ID
+        id: "scanTime",
         header: "Scan Time",
         cell: (info) => {
           const value = info.getValue();
-          if (!value) return "-";
+          if (!value)
+            return (
+              <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
+                - -
+              </span>
+            );
           return new Date(value).toLocaleString();
         },
       }),
@@ -96,7 +108,6 @@ export default function ReportTable({ data }: Props) {
   return (
     <div className="overflow-x-auto border border-gray-300 bg-white">
       <table className="min-w-full table-auto border-collapse">
-
         {/* HEADER */}
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map((hg) => (
@@ -155,7 +166,6 @@ export default function ReportTable({ data }: Props) {
             </tr>
           ))}
         </tbody>
-
       </table>
     </div>
   );
