@@ -141,7 +141,8 @@ export default function ReportPage() {
                   name="startTime"
                   value={filters.startTime}
                   onChange={handleChange}
-                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
+                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                  style={{minWidth: "195px"}}
                 />
               </div>
 
@@ -156,6 +157,7 @@ export default function ReportPage() {
                   value={filters.endTime}
                   onChange={handleChange}
                   className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
+                  style={{minWidth: "195px"}}
                 />
               </div>
 
