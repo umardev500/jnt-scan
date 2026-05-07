@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReportTable from "../components/ReportTable";
 import { useReport } from "../hooks/useReport";
 import type { ReportFilter } from "../types/reportFilter";
@@ -37,7 +37,6 @@ export default function ReportPage() {
     data = [],
     loading,
     error,
-    refetch,
   } = useReport(appliedFilters);
 
   // =========================
@@ -102,7 +101,7 @@ export default function ReportPage() {
               value={apiUrl}
               onChange={(e) => setApiUrl(e.target.value)}
               placeholder="Enter API URL (e.g. https://api.example.com)"
-              className="w-[420px] rounded border px-3 py-2 text-sm"
+              className="w-105 rounded border px-3 py-2 text-sm"
             />
 
             <button
