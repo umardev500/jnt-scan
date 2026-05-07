@@ -22,12 +22,12 @@ export default function ReportTable({ data }: Props) {
 
   const columns = useMemo(
     () => [
-      // NUMBERING COLUMN - NOT SORTABLE, COUNTER GENERATED IN RENDER
+      // ROW COUNTER - NOT SORTABLE
       {
         id: "rowNumber",
         header: "No",
         enableSorting: false,
-        cell: (_info, rowIndex: number) => rowIndex + 1,
+        cell: () => null, // placeholder, actual counter is in tbody
       },
       columnHelper.accessor("shipmentNo", {
         header: "Shipment No",
@@ -140,7 +140,7 @@ export default function ReportTable({ data }: Props) {
               key={row.id}
               className="border border-gray-200 transition-colors duration-150 hover:bg-gray-100"
             >
-              {row.getVisibleCells().map((cell, cellIndex) => (
+              {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
                   className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${
@@ -148,7 +148,7 @@ export default function ReportTable({ data }: Props) {
                   }`}
                 >
                   {cell.column.id === "rowNumber"
-                    ? idx + 1 // COUNTER OUTSIDE DATA
+                    ? idx + 1 // COUNTER OUTSIDE DATA, safe for filtered/sorted
                     : flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
