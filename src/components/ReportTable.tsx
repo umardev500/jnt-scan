@@ -115,7 +115,7 @@ export default function ReportTable({ data }: Props) {
                         ? header.column.getToggleSortingHandler()
                         : undefined
                     }
-                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 ${
+                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 text-nowrap ${
                       header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
                     } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""}`}
                   >

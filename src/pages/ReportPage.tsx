@@ -188,26 +188,22 @@ export default function ReportPage() {
             </div>
           </div>
 
-          {/* LOADING */}
-          {loading && (
-            <div className="p-4 text-sm text-gray-500">
-              Loading report...
-            </div>
-          )}
+          <div className="p-2 relative">
 
-          {/* ERROR */}
-          {error && (
-            <div className="p-4 text-sm text-red-500">
-              {error}
-            </div>
-          )}
+            {loading && (
+              <div className="absolute top-2 right-2 z-10 rounded bg-white px-3 py-1 text-sm shadow">
+                Loading...
+              </div>
+            )}
 
-          {/* TABLE */}
-          {!loading && !error && (
-            <div className="p-2">
-              <ReportTable data={data || []} />
-            </div>
-          )}
+            {error && (
+              <div className="p-4 text-sm text-red-500">
+                {error}
+              </div>
+            )}
+
+            <ReportTable data={data || []} />
+          </div>
 
         </div>
       </div>
