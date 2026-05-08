@@ -66,7 +66,7 @@ export default function ReportTable({ data }: Props) {
           return new Date(value).toLocaleString();
         },
       }),
-      columnHelper.accessor("appTrackDepartureTime", {
+      columnHelper.accessor("trackOutTime", {
         id: "scanTime",
         header: "Scan Time",
         cell: (info) => {
