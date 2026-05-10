@@ -16,8 +16,8 @@ export default function ReportPage() {
   // =========================
   const [filters, setFilters] = useState<ReportFilter>({
     shipmentState: 3,
-    startTime: formatRaw("2026-05-09T08:00"),
-    endTime: formatRaw("2026-05-10T20:00"),
+    startTime: formatRaw("2026-05-10T08:00"),
+    endTime: formatRaw("2026-05-11T20:00"),
   });
 
   // =========================
@@ -26,8 +26,8 @@ export default function ReportPage() {
   const [appliedFilters, setAppliedFilters] =
     useState<ReportFilter>({
       shipmentState: 3,
-      startTime: formatRaw("2026-05-09T08:00"),
-      endTime: formatRaw("2026-05-10T20:00"),
+      startTime: formatRaw("2026-05-10T08:00"),
+      endTime: formatRaw("2026-05-11T20:00"),
     });
 
   // =========================
