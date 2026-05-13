@@ -72,7 +72,7 @@ export default function ReportPage() {
           HEADER + API INPUT FORM
           ========================= */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-6 flex flex-col gap-4">
+        <div className="mx-auto max-w-[1600px] px-6 py-6 flex flex-col gap-4">
 
           {/* TITLE */}
           <div>
@@ -107,7 +107,7 @@ export default function ReportPage() {
       {/* =========================
           CONTENT
           ========================= */}
-      <div className="mx-auto max-w-7xl px-6 py-6">
+      <div className="mx-auto max-w-[1600px] px-6 py-6">
 
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
 
