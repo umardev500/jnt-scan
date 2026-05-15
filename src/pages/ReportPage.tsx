@@ -11,24 +11,25 @@ export default function ReportPage() {
   // =========================
   const { apiUrl, setApiUrl } = useApi();
 
+  const defaultReportFilter: ReportFilter = {
+    shipmentState: 3,
+    startTime: formatRaw("2026-05-15T20:00"),
+    endTime: formatRaw("2026-05-16T10:00"),
+  };
+
+
   // =========================
   // INPUT STATE (typing only)
   // =========================
-  const [filters, setFilters] = useState<ReportFilter>({
-    shipmentState: 3,
-    startTime: formatRaw("2026-05-14T20:00"),
-    endTime: formatRaw("2026-05-15T10:00"),
-  });
+  const [filters, setFilters] = useState<ReportFilter>(
+    defaultReportFilter
+  );
 
   // =========================
   // APPLIED STATE (API trigger)
   // =========================
   const [appliedFilters, setAppliedFilters] =
-    useState<ReportFilter>({
-      shipmentState: 3,
-      startTime: formatRaw("2026-05-14T20:00"),
-      endTime: formatRaw("2026-05-15T10:00"),
-    });
+    useState<ReportFilter>(defaultReportFilter);
 
   // =========================
   // FETCH DATA (guarded)
