@@ -4,6 +4,9 @@ import { useReport } from "../hooks/useReport";
 import type { ReportFilter } from "../types/reportFilter";
 import { formatRaw } from "../helpers/time";
 import { useApi } from "../context/ApiContext";
+import loadingAnimation from "../assets/loading.lottie";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 
 export default function ReportPage() {
   // =========================
@@ -191,9 +194,17 @@ export default function ReportPage() {
 
           <div className="p-2 relative">
 
+            {/* Loading Overlay */}
             {loading && (
-              <div className="absolute top-2 right-2 z-10 rounded bg-white px-3 py-1 text-sm shadow">
-                Loading...
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/70 backdrop-blur-[1px]">
+                {/* Tambahkan aspect-square atau h-40 di sini 👇 */}
+                <div className="w-80 flex items-center justify-center">
+                  <DotLottieReact
+                    src={loadingAnimation}
+                    loop
+                    autoplay
+                  />
+                </div>
               </div>
             )}
 
