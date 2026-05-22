@@ -16,8 +16,8 @@ export default function ReportPage() {
 
   const defaultReportFilter: ReportFilter = {
     shipmentState: 3,
-    startTime: formatRaw("2026-05-21T08:00"),
-    endTime: formatRaw("2026-05-22T20:00"),
+    startTime: formatRaw("2026-05-22T08:00"),
+    endTime: formatRaw("2026-05-23T20:00"),
   };
 
 
