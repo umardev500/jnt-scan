@@ -41,6 +41,10 @@ export default function ReportTable({ data }: Props) {
         header: "Plate Number",
         cell: (info) => info.getValue(),
       }),
+      columnHelper.accessor("vehicletypeName", {
+        header: "Vehicle Type",
+        cell: (info) => info.getValue(),
+      }),
       columnHelper.accessor("arriveNetworkCode", {
         header: "Destination",
         cell: (info) => info.getValue() || "-",
