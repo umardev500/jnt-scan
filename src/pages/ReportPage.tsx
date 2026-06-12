@@ -6,6 +6,8 @@ import { formatRaw } from "../helpers/time";
 import { useApi } from "../context/ApiContext";
 import loadingAnimation from "../assets/loading.lottie";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import type { VehicleCheckPayload, VehicleCheckResult } from "../types/report";
+import VehicleCheckModal from "../components/VehicleModal";
 
 
 export default function ReportPage() {
@@ -19,6 +21,14 @@ export default function ReportPage() {
     startTime: formatRaw("2026-06-12T08:00"),
     endTime: formatRaw("2026-06-13T10:00"),
   };
+
+  const [vehicleResults, setVehicleResults] = useState<
+    VehicleCheckResult[]
+  >([]);
+
+  const [showVehicleModal, setShowVehicleModal] = useState(false);
+
+  const [checkingVehicle, setCheckingVehicle] = useState(false);
 
 
   // =========================
@@ -66,6 +76,40 @@ export default function ReportPage() {
       startTime: formatRaw(filters.startTime),
       endTime: formatRaw(filters.endTime),
     });
+  };
+
+
+  const handleCheckVehicle = async () => {
+    const payload: VehicleCheckPayload[] = data.map((item) => ({
+      shipmentNo: item.shipmentNo,
+      plateNumber: item.plateNumber,
+      vehicleType: item.vehicletypeName,
+    }));
+
+    try {
+      setCheckingVehicle(true);
+
+      const res = await fetch(`${apiUrl}/check-vehicle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to check vehicle");
+      }
+
+      const result = await res.json();
+
+      setVehicleResults(result.data ?? []);
+      setShowVehicleModal(true);
+    } catch (err) {
+      console.error("Failed to check vehicle:", err);
+    } finally {
+      setCheckingVehicle(false);
+    }
   };
 
 
@@ -187,9 +231,19 @@ export default function ReportPage() {
                 >
                   Search
                 </button>
+                &nbsp;&nbsp;
+                <button
+                  onClick={handleCheckVehicle}
+                  disabled={checkingVehicle}
+                  className="w-full sm:w-auto rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-50"
+              >
+                  {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
+                </button>
               </div>
 
             </div>
+
+
           </div>
 
           <div className="p-2 relative">
@@ -219,6 +273,12 @@ export default function ReportPage() {
 
         </div>
       </div>
+
+      <VehicleCheckModal
+        open={showVehicleModal}
+        onClose={() => setShowVehicleModal(false)}
+        results={vehicleResults}
+      />
     </div>
   );
 }

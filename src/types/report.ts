@@ -129,3 +129,17 @@ export interface RecordItem {
   isOneHourInterval: number;
   linePartVolumeRate: number | null;
 }
+
+export type VehicleCheckPayload = {
+  shipmentNo: string;
+  plateNumber: string;
+  vehicleType: string;
+};
+
+export type VehicleCheckResult = {
+  shipmentNo: string;
+  plateNumber: string;
+  vehicleType: string;
+  status?: string;
+  found: boolean;
+};
