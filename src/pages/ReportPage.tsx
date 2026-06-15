@@ -18,8 +18,8 @@ export default function ReportPage() {
 
   const defaultReportFilter: ReportFilter = {
     shipmentState: 3,
-    startTime: formatRaw("2026-06-14T08:00"),
-    endTime: formatRaw("2026-06-15T10:00"),
+    startTime: formatRaw("2026-06-15T08:00"),
+    endTime: formatRaw("2026-06-16T10:00"),
   };
 
   const [vehicleResults, setVehicleResults] = useState<
