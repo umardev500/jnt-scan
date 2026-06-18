@@ -20,6 +20,26 @@ export default function ReportTable({ data }: Props) {
     { id: "plannedDepartureTime", desc: false },
   ]);
 
+  const getTimeStatus = (
+    actualTime?: string | null,
+    plannedTime?: string | null
+  ) => {
+    if (!actualTime || !plannedTime) return "normal";
+
+    const actual = new Date(actualTime).getTime();
+    const planned = new Date(plannedTime).getTime();
+
+    // Late
+    if (actual > planned) return "late";
+
+    // Within 15 minutes before cutoff
+    const diffMinutes = (planned - actual) / (1000 * 60);
+
+    if (diffMinutes <= 15) return "warning";
+
+    return "normal";
+  };
+
   const columns = useMemo(
     () => [
       // ROW COUNTER - NOT SORTABLE
@@ -56,32 +76,94 @@ export default function ReportTable({ data }: Props) {
             ? new Date(info.getValue()).toLocaleString()
             : "-",
       }),
+      // columnHelper.accessor("appTrackDepartureTime", {
+      //   id: "appDepartureTime",
+      //   header: "App Departure",
+      //   cell: (info) => {
+      //     const value = info.getValue();
+      //     if (!value)
+      //       return (
+      //         <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
+      //           - -
+      //         </span>
+      //       );
+      //     return new Date(value).toLocaleString();
+      //   },
+      // }),
       columnHelper.accessor("appTrackDepartureTime", {
         id: "appDepartureTime",
         header: "App Departure",
         cell: (info) => {
           const value = info.getValue();
+          const plannedDeparture =
+            info.row.original.plannedDepartureTime;
+
           if (!value)
             return (
               <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
                 - -
               </span>
             );
-          return new Date(value).toLocaleString();
+
+          const status = getTimeStatus(value, plannedDeparture);
+
+          return (
+            <span
+              className={`inline-block px-2 py-0.5 rounded-lg text-sm ${status === "late"
+                ? "bg-red-100 text-red-800"
+                : status === "warning"
+                  ? "bg-yellow-100 text-yellow-800 animate-pulse"
+                  : ""
+                }`}
+            >
+              {new Date(value).toLocaleString()}
+            </span>
+          );
         },
       }),
+      // columnHelper.accessor("trackOutTime", {
+      //   id: "scanTime",
+      //   header: "Scan Time",
+      //   cell: (info) => {
+      //     const value = info.getValue();
+      //     if (!value)
+      //       return (
+      //         <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
+      //           - -
+      //         </span>
+      //       );
+      //     return new Date(value).toLocaleString();
+      //   },
+      // }),
       columnHelper.accessor("trackOutTime", {
         id: "scanTime",
         header: "Scan Time",
         cell: (info) => {
           const value = info.getValue();
+          const plannedDeparture =
+            info.row.original.plannedDepartureTime;
+
           if (!value)
             return (
               <span className="inline-block bg-red-100 text-red-800 px-2 py-0.5 rounded-lg text-sm">
                 - -
               </span>
             );
-          return new Date(value).toLocaleString();
+
+          const status = getTimeStatus(value, plannedDeparture);
+
+          return (
+            <span
+              className={`inline-block px-2 py-0.5 rounded-lg text-sm ${status === "late"
+                ? "bg-red-100 text-red-800"
+                : status === "warning"
+                  ? "bg-yellow-100 text-yellow-800 animate-pulse"
+                  : ""
+                }`}
+            >
+              {new Date(value).toLocaleString()}
+            </span>
+          );
         },
       }),
     ],
@@ -119,9 +201,8 @@ export default function ReportTable({ data }: Props) {
                         ? header.column.getToggleSortingHandler()
                         : undefined
                     }
-                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 text-nowrap ${
-                      header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
-                    } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""}`}
+                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 text-nowrap ${header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
+                      } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""}`}
                   >
                     <div className="flex items-center gap-2">
                       {flexRender(header.column.columnDef.header, header.getContext())}
@@ -147,9 +228,8 @@ export default function ReportTable({ data }: Props) {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${
-                    cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
-                  }`}
+                  className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
+                    }`}
                 >
                   {cell.column.id === "rowNumber"
                     ? idx + 1 // COUNTER OUTSIDE DATA, safe for filtered/sorted
