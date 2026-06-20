@@ -64,6 +64,7 @@ export default function ReportPage() {
     setFilters((prev) => ({
       ...prev,
       [name]: name === "shipmentState" ? Number(value) : value,
+      shipmentName: e.target.value.toUpperCase(),
     }));
   };
 
@@ -180,7 +181,7 @@ export default function ReportPage() {
                     value={filters.shipmentName || ""}
                     onChange={handleChange}
                     placeholder="Enter shipment name"
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm uppercase"
                   />
                 </div>
 
