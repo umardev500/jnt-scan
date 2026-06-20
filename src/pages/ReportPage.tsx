@@ -63,10 +63,9 @@ export default function ReportPage() {
 
     setFilters((prev) => ({
       ...prev,
-      [name]: name === "shipmentState" ? Number(value) : value,
-      [name]: name === "shipmentName"
+      [name]: name === "shipmentState" ? Number(value) : name === "shipmentName"
         ? value.toUpperCase()
-        : value
+        : value,
     }));
   };
 
