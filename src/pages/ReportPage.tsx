@@ -78,6 +78,11 @@ export default function ReportPage() {
     });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSearch();
+  };
+
 
   const handleCheckVehicle = async () => {
     const payload: VehicleCheckPayload[] = data.map((item) => ({
@@ -161,91 +166,93 @@ export default function ReportPage() {
 
           {/* FILTER BAR */}
           <div className="border-b border-gray-200 p-4">
-            <div className="flex flex-wrap gap-4">
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-wrap gap-4">
 
-              <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
-                  Shipment Name
-                </label>
-                <input
-                  type="text"
-                  name="shipmentName"
-                  value={filters.shipmentName || ""}
-                  onChange={handleChange}
-                  placeholder="Enter shipment name"
-                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
-                />
+                {/* Shipment Name */}
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                    Shipment Name
+                  </label>
+                  <input
+                    type="text"
+                    name="shipmentName"
+                    value={filters.shipmentName || ""}
+                    onChange={handleChange}
+                    placeholder="Enter shipment name"
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                  />
+                </div>
+
+                {/* Shipment State */}
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                    Shipment State
+                  </label>
+                  <select
+                    name="shipmentState"
+                    value={filters.shipmentState}
+                    onChange={handleChange}
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                  >
+                    <option value={2}>Menunggu Proses</option>
+                    <option value={3}>Dalam Perjalanan</option>
+                  </select>
+                </div>
+
+                {/* Start Time */}
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                    Start Time
+                  </label>
+                  <input
+                    type="datetime-local"
+                    name="startTime"
+                    value={filters.startTime}
+                    onChange={handleChange}
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                    style={{ minWidth: "195px" }}
+                  />
+                </div>
+
+                {/* End Time */}
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                    End Time
+                  </label>
+                  <input
+                    type="datetime-local"
+                    name="endTime"
+                    value={filters.endTime}
+                    onChange={handleChange}
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
+                    style={{ minWidth: "195px" }}
+                  />
+                </div>
+
+                <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                  >
+                    Search
+                  </button>
+
+                  &nbsp;&nbsp;
+
+                  <button
+                    type="button"
+                    onClick={handleCheckVehicle}
+                    disabled={checkingVehicle}
+                    className="w-full sm:w-auto rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
+                  </button>
+                </div>
+
               </div>
-
-              {/* Shipment State */}
-              <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
-                  Shipment State
-                </label>
-                <select
-                  name="shipmentState"
-                  value={filters.shipmentState}
-                  onChange={handleChange}
-                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
-                >
-                  <option value={2}>Menunggu Proses</option>
-                  <option value={3}>Dalam Perjalanan</option>
-                </select>
-              </div>
-
-              {/* Start Time */}
-              <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
-                  Start Time
-                </label>
-                <input
-                  type="datetime-local"
-                  name="startTime"
-                  value={filters.startTime}
-                  onChange={handleChange}
-                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
-                  style={{ minWidth: "195px" }}
-                />
-              </div>
-
-              {/* End Time */}
-              <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
-                  End Time
-                </label>
-                <input
-                  type="datetime-local"
-                  name="endTime"
-                  value={filters.endTime}
-                  onChange={handleChange}
-                  className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
-                  style={{ minWidth: "195px" }}
-                />
-              </div>
-
-              {/* SEARCH BUTTON */}
-              <div className="w-full sm:w-auto flex justify-center sm:justify-start">
-                <button
-                  onClick={handleSearch}
-                  className="w-full sm:w-auto rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
-                >
-                  Search
-                </button>
-                &nbsp;&nbsp;
-                <button
-                  onClick={handleCheckVehicle}
-                  disabled={checkingVehicle}
-                  className="w-full sm:w-auto rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-50"
-              >
-                  {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
-                </button>
-              </div>
-
-            </div>
-
-
+            </form>
           </div>
-
           <div className="p-2 relative">
 
             {/* Loading Overlay */}
