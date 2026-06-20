@@ -64,7 +64,9 @@ export default function ReportPage() {
     setFilters((prev) => ({
       ...prev,
       [name]: name === "shipmentState" ? Number(value) : value,
-      shipmentName: e.target.value.toUpperCase(),
+      [name]: name === "shipmentName"
+        ? value.toUpperCase()
+        : value
     }));
   };
 
