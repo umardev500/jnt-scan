@@ -40,6 +40,25 @@ export default function ReportTable({ data }: Props) {
     return "normal";
   };
 
+  const getDepartureStatus = (plannedTime?: string | null) => {
+    if (!plannedTime) return "normal";
+
+    const now = Date.now();
+    const planned = new Date(plannedTime).getTime();
+
+    const diffMinutes = (planned - now) / (1000 * 60);
+
+    if (diffMinutes < 0) return "late";
+
+    if (diffMinutes <= 10) return "danger";
+
+    if (diffMinutes <= 15) return "warningDanger";
+
+    if (diffMinutes <= 20) return "warning";
+
+    return "normal";
+  };
+
   const columns = useMemo(
     () => [
       // ROW COUNTER - NOT SORTABLE
@@ -71,11 +90,60 @@ export default function ReportTable({ data }: Props) {
       }),
       columnHelper.accessor("plannedDepartureTime", {
         header: "Planned Departure",
-        cell: (info) =>
-          info.getValue()
-            ? new Date(info.getValue()).toLocaleString()
-            : "-",
+        cell: (info) => {
+          const planned = info.getValue();
+
+          const scanTime = info.row.original.trackOutTime;
+          const appDeparture = info.row.original.appTrackDepartureTime;
+
+          // 🚫 STOP WARNING ONLY IF BOTH ARE FILLED
+          const isCompleted = Boolean(scanTime && appDeparture);
+
+          if (!planned) {
+            return (
+              <span className="inline-block bg-gray-100 text-gray-700 px-2 py-0.5 rounded-lg text-sm">
+                -
+              </span>
+            );
+          }
+
+          // 🟢 Completed state (NO warning anymore)
+          if (isCompleted) {
+            return (
+              <span className="inline-block bg-green-100 text-green-800 px-2 py-0.5 rounded-lg text-sm">
+                {new Date(planned).toLocaleString()}
+              </span>
+            );
+          }
+
+          // ⏱ ACTIVE WARNING (only if NOT completed)
+          const status = getDepartureStatus(planned);
+
+          return (
+            <span
+              className={`inline-block px-2 py-0.5 rounded-lg text-sm ${status === "late"
+                ? "bg-red-200 text-red-800"
+                : status === "danger"
+                  ? "bg-red-100 text-red-800 animate-pulse"
+                  : status === "warningDanger"
+                    ? "bg-orange-100 text-orange-800 animate-pulse"
+                    : status === "warning"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-gray-100 text-gray-700"
+                }`}
+            >
+              {new Date(planned).toLocaleString()}
+            </span>
+          );
+        },
       }),
+      // columnHelper.accessor("plannedDepartureTime", {
+      //   header: "Planned Departure",
+      //   cell: (info) =>
+      //     info.getValue()
+      //       ? new Date(info.getValue()).toLocaleString()
+      //       : "-",
+      // }),
       // columnHelper.accessor("appTrackDepartureTime", {
       //   id: "appDepartureTime",
       //   header: "App Departure",
