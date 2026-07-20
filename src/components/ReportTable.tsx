@@ -76,6 +76,18 @@ export default function ReportTable({ data }: Props) {
         header: "Driver",
         cell: (info) => info.getValue(),
       }),
+      columnHelper.accessor("carrierName", {
+        header: "Carrier",
+        cell: (info) => {
+          const value = info.getValue();
+
+          return value
+            .replace(/^PT\.?\s*/i, "") // Remove "PT." or "PT"
+            .split(/\s+/)
+            .map((word) => word[0])
+            .join("");
+        },
+      }),
       columnHelper.accessor("plateNumber", {
         header: "Plate Number",
         cell: (info) => info.getValue(),
