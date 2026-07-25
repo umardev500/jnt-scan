@@ -18,8 +18,8 @@ export default function ReportPage() {
 
   const defaultReportFilter: ReportFilter = {
     shipmentState: 3,
-    startTime: formatRaw("2026-07-24T20:00"),
-    endTime: formatRaw("2026-07-25T10:00"),
+    startTime: formatRaw("2026-07-25T20:00"),
+    endTime: formatRaw("2026-07-26T10:00"),
   };
 
   const [vehicleResults, setVehicleResults] = useState<
@@ -127,7 +127,7 @@ export default function ReportPage() {
           HEADER + API INPUT FORM
           ========================= */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-[1600px] px-6 py-6 flex flex-col gap-4">
+        <div className="mx-auto max-w-[1700px] px-6 py-6 flex flex-col gap-4">
 
           {/* TITLE */}
           <div>
@@ -162,7 +162,7 @@ export default function ReportPage() {
       {/* =========================
           CONTENT
           ========================= */}
-      <div className="mx-auto max-w-[1600px] px-6 py-6">
+      <div className="mx-auto max-w-[1700px] px-6 py-6">
 
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
 
