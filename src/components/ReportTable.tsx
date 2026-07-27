@@ -11,11 +11,14 @@ import { useState, useMemo } from "react";
 
 interface Props {
   data: RecordItem[];
+  printedList: RecordItem[];
+  onAddToPrintedList?: (item: RecordItem) => void;
+  onRemoveFromPrintedList?: (shipmentNo: string) => void;
 }
 
 const columnHelper = createColumnHelper<RecordItem>();
 
-export default function ReportTable({ data }: Props) {
+export default function ReportTable({ data, printedList, onAddToPrintedList, onRemoveFromPrintedList }: Props) {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "plannedDepartureTime", desc: false },
   ]);
@@ -246,8 +249,36 @@ export default function ReportTable({ data }: Props) {
           );
         },
       }),
+      columnHelper.display({
+        id: "action",
+        header: "Action",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const added = printedList.some(
+            (x) => x.shipmentNo === row.original.shipmentNo
+          );
+
+          return (
+            <button
+              onClick={() => {
+                if (added) {
+                  onRemoveFromPrintedList?.(row.original.shipmentNo);
+                } else {
+                  onAddToPrintedList?.(row.original);
+                }
+              }}
+              className={`rounded w-8 h-8 text-xs font-medium text-white ${added
+                  ? "bg-red-700 hover:bg-red-800"
+                  : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {added ? "⃠" : "✓"}
+            </button>
+          );
+        },
+      }),
     ],
-    []
+    [printedList, onAddToPrintedList]
   );
 
   const table = useReactTable({
@@ -273,6 +304,7 @@ export default function ReportTable({ data }: Props) {
               {hg.headers.map((header) => {
                 const sortState = header.column.getIsSorted();
                 const isNumberCol = header.id === "rowNumber";
+                const isActionCol = header.id === "action";
                 return (
                   <th
                     key={header.id}
@@ -282,7 +314,7 @@ export default function ReportTable({ data }: Props) {
                         : undefined
                     }
                     className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 text-nowrap ${header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
-                      } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""}`}
+                      } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""} ${isActionCol ? "sticky right-0 bg-gray-100 z-20" : ""} ${isActionCol ? "hidden lg:table-cell" : ""}`}
                   >
                     <div className="flex items-center gap-2">
                       {flexRender(header.column.columnDef.header, header.getContext())}
@@ -309,7 +341,10 @@ export default function ReportTable({ data }: Props) {
                 <td
                   key={cell.id}
                   className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
-                    }`}
+                    } ${cell.column.id === "action"
+                      ? "sticky right-0 bg-white z-10"
+                      : ""
+                    } ${cell.column.id === "action" ? "hidden lg:table-cell" : ""}`}
                 >
                   {cell.column.id === "rowNumber"
                     ? idx + 1 // COUNTER OUTSIDE DATA, safe for filtered/sorted

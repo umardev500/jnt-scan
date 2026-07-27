@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReportTable from "../components/ReportTable";
 import { useReport } from "../hooks/useReport";
 import type { ReportFilter } from "../types/reportFilter";
@@ -6,7 +6,7 @@ import { formatRaw } from "../helpers/time";
 import { useApi } from "../context/ApiContext";
 import loadingAnimation from "../assets/loading.lottie";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import type { VehicleCheckPayload, VehicleCheckResult } from "../types/report";
+import type { RecordItem, VehicleCheckPayload, VehicleCheckResult } from "../types/report";
 import VehicleCheckModal from "../components/VehicleModal";
 
 
@@ -29,6 +29,19 @@ export default function ReportPage() {
   const [showVehicleModal, setShowVehicleModal] = useState(false);
 
   const [checkingVehicle, setCheckingVehicle] = useState(false);
+
+  // const [printedList, setPrintedList] = useState<RecordItem[]>([]);
+  const [printedList, setPrintedList] = useState<RecordItem[]>(() => {
+    const saved = localStorage.getItem("printedList");
+
+    if (!saved) return [];
+
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
+    }
+  });
 
 
   // =========================
@@ -118,6 +131,33 @@ export default function ReportPage() {
       setCheckingVehicle(false);
     }
   };
+
+  const handleAddToPrintedList = (item: RecordItem) => {
+    setPrintedList((prev) => {
+      if (prev.some((x) => x.shipmentNo === item.shipmentNo)) {
+        return prev; // prevent duplicates
+      }
+
+      return [...prev, item];
+    });
+  };
+
+  const handleRemoveFromPrintedList = (shipmentNo: string) => {
+    setPrintedList((prev) =>
+      prev.filter((x) => x.shipmentNo !== shipmentNo)
+    );
+  };
+
+  useEffect(() => {
+    console.log("printedList updated:", printedList);
+  }, [printedList]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "printedList",
+      JSON.stringify(printedList)
+    );
+  }, [printedList]);
 
 
   return (
@@ -277,7 +317,7 @@ export default function ReportPage() {
               </div>
             )}
 
-            <ReportTable data={data || []} />
+            <ReportTable printedList={printedList} data={data || []} onAddToPrintedList={handleAddToPrintedList} onRemoveFromPrintedList={handleRemoveFromPrintedList} />
           </div>
 
         </div>
