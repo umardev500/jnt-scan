@@ -168,7 +168,7 @@ export default function ReportPage() {
           {/* TITLE */}
           <div>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Report Dashboard
+              Report Dashboard v2
             </h1>
             <p className="mt-1 text-sm text-gray-500">
               Shipment overview and operational data
