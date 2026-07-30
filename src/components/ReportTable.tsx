@@ -11,7 +11,7 @@ import { useState, useMemo } from "react";
 
 interface Props {
   data: RecordItem[];
-  printedList: RecordItem[];
+  printedList: string[];
   onAddToPrintedList?: (item: RecordItem) => void;
   onRemoveFromPrintedList?: (shipmentNo: string) => void;
 }
@@ -254,9 +254,11 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
         header: "Action",
         enableSorting: false,
         cell: ({ row }) => {
-          const added = printedList.some(
-            (x) => x.shipmentNo === row.original.shipmentNo
-          );
+          // const added = printedList.some(
+          //   (x) => x.shipmentNo === row.original.shipmentNo
+          // );
+
+          const added = printedList.includes(row.original.shipmentNo);
 
           return (
             <button

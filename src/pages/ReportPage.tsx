@@ -31,13 +31,13 @@ export default function ReportPage() {
   const [checkingVehicle, setCheckingVehicle] = useState(false);
 
   // const [printedList, setPrintedList] = useState<RecordItem[]>([]);
-  const [printedList, setPrintedList] = useState<RecordItem[]>(() => {
+  const [printedList, setPrintedList] = useState<string[]>(() => {
     const saved = localStorage.getItem("printedList");
 
     if (!saved) return [];
 
     try {
-      return JSON.parse(saved);
+      return JSON.parse(saved) as string[];
     } catch {
       return [];
     }
@@ -133,19 +133,15 @@ export default function ReportPage() {
   };
 
   const handleAddToPrintedList = (item: RecordItem) => {
-    setPrintedList((prev) => {
-      if (prev.some((x) => x.shipmentNo === item.shipmentNo)) {
-        return prev; // prevent duplicates
-      }
-
-      return [...prev, item];
-    });
+    setPrintedList((prev) =>
+      prev.includes(item.shipmentNo)
+        ? prev
+        : [...prev, item.shipmentNo]
+    );
   };
 
   const handleRemoveFromPrintedList = (shipmentNo: string) => {
-    setPrintedList((prev) =>
-      prev.filter((x) => x.shipmentNo !== shipmentNo)
-    );
+    setPrintedList((prev) => prev.filter((x) => x !== shipmentNo));
   };
 
   useEffect(() => {
