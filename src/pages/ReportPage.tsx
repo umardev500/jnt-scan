@@ -203,7 +203,7 @@ export default function ReportPage() {
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
 
           {/* FILTER BAR */}
-          <div className="border-b border-gray-200 p-4">
+          <div className="sticky top-0 z-30 border-b border-gray-200 bg-white p-4 shadow-sm">
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap gap-4">
 
