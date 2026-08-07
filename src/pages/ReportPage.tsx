@@ -233,8 +233,11 @@ export default function ReportPage() {
                     onChange={handleChange}
                     className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
                   >
+                    <option value={1}>Terjadwal</option>
                     <option value={2}>Menunggu Proses</option>
                     <option value={3}>Dalam Perjalanan</option>
+                    <option value={4}>Lengkap</option>
+                    <option value={5}>Dihapuskan</option>
                   </select>
                 </div>
 
