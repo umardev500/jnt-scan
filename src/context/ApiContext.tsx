@@ -10,7 +10,7 @@ const ApiContext = createContext<ApiContextType | undefined>(undefined);
 const STORAGE_KEY = "api_url";
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
-  const [apiUrl, setApiUrlState] = useState<string>("https://showtimes-nutrition-appropriations-confidence.trycloudflare.com");
+  const [apiUrl, setApiUrlState] = useState<string>("https://papua-arlington-gathering-myth.trycloudflare.com");
 
   // ✅ Load from localStorage on startup
   useEffect(() => {
