@@ -22,6 +22,7 @@ export default function ReportPage() {
     endTime: formatRaw("2026-08-13T10:00"),
   };
 
+
   const [vehicleResults, setVehicleResults] = useState<
     VehicleCheckResult[]
   >([]);
@@ -65,6 +66,22 @@ export default function ReportPage() {
     loading,
     error,
   } = useReport(appliedFilters);
+
+  const [driverFilter, setDriverFilter] = useState("");
+
+  const filteredData = data.filter((item) => {
+    const driverName = item.driverName.trim().toUpperCase();
+
+    if (driverFilter === "TEMBAKAN") {
+      return driverName === "TEMBAKAN";
+    }
+
+    if (driverFilter === "EXCLUDE_TEMBAKAN") {
+      return driverName !== "TEMBAKAN";
+    }
+
+    return true;
+  });
 
   // =========================
   // INPUT CHANGE (NO FETCH)
@@ -241,6 +258,23 @@ export default function ReportPage() {
                   </select>
                 </div>
 
+                {/* Driver Filter */}
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
+                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                    Driver
+                  </label>
+
+                  <select
+                    value={driverFilter}
+                    onChange={(e) => setDriverFilter(e.target.value)}
+                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                  >
+                    <option value="">All Drivers</option>
+                    <option value="TEMBAKAN">TEMBAKAN Only</option>
+                    <option value="EXCLUDE_TEMBAKAN">Exclude TEMBAKAN</option>
+                  </select>
+                </div>
+
                 {/* Start Time */}
                 <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
                   <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
@@ -316,7 +350,7 @@ export default function ReportPage() {
               </div>
             )}
 
-            <ReportTable printedList={printedList} data={data || []} onAddToPrintedList={handleAddToPrintedList} onRemoveFromPrintedList={handleRemoveFromPrintedList} />
+            <ReportTable printedList={printedList} data={filteredData || []} onAddToPrintedList={handleAddToPrintedList} onRemoveFromPrintedList={handleRemoveFromPrintedList} />
           </div>
 
         </div>
