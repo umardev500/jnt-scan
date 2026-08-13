@@ -9,18 +9,55 @@ const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
 const STORAGE_KEY = "api_url";
 
-export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
-  const [apiUrl, setApiUrlState] = useState<string>("https://capability-neutral-rear-payments.trycloudflare.com");
+const CURRENT_API =
+  "https://next-api-omega-ruby.vercel.app";
 
-  // ✅ Load from localStorage on startup
+export const ApiProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [apiUrl, setApiUrlState] = useState<string>("");
+
+  // Fetch current API URL from Next.js API
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved && apiUrl == "") {
-      setApiUrlState(saved);
-    }
+    console.log("useEffect")
+    
+    const loadApiUrl = async () => {
+      const url = `${CURRENT_API}/api/urls?newer=true`;
+      console.log(url)
+      
+      try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch API URL");
+        }
+
+        const data = await response.json();
+
+        const currentUrl = data[0]?.url;
+        console.log("durr", currentUrl)
+
+        if (currentUrl) {
+          setApiUrlState(currentUrl);
+          localStorage.setItem(STORAGE_KEY, currentUrl);
+        }
+      } catch (error) {
+        console.error("Failed to fetch current URL:", error);
+
+        // fallback to localStorage
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+          setApiUrlState(saved);
+        }
+      }
+    };
+
+    loadApiUrl();
   }, []);
 
-  // ✅ sync to localStorage whenever changes
   const setApiUrl = (url: string) => {
     setApiUrlState(url);
     localStorage.setItem(STORAGE_KEY, url);
@@ -35,6 +72,10 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useApi = () => {
   const ctx = useContext(ApiContext);
-  if (!ctx) throw new Error("useApi must be used inside ApiProvider");
+
+  if (!ctx) {
+    throw new Error("useApi must be used inside ApiProvider");
+  }
+
   return ctx;
 };
