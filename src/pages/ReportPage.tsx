@@ -16,7 +16,20 @@ export default function ReportPage() {
   // =========================
   const { apiUrl, setApiUrl } = useApi();
 
-  const defaultReportFilter: ReportFilter = { shipmentState: 3, startTime: formatRaw("2026-08-12T08:00"), endTime: formatRaw("2026-08-13T10:00"), };
+  // const defaultReportFilter: ReportFilter = { shipmentState: 3, startTime: formatRaw("2026-08-12T08:00"), endTime: formatRaw("2026-08-13T10:00"), };
+  const now = new Date();
+
+  const date = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  const defaultReportFilter: ReportFilter = {
+    shipmentState: 3,
+    startTime: formatRaw(`${date}T08:00`),
+    endTime: formatRaw(`${date}T10:00`),
+  };
 
 
   const [vehicleResults, setVehicleResults] = useState<
