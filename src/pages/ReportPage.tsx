@@ -25,10 +25,19 @@ export default function ReportPage() {
     String(now.getDate()).padStart(2, "0"),
   ].join("-");
 
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const nextDate = [
+    tomorrow.getFullYear(),
+    String(tomorrow.getMonth() + 1).padStart(2, "0"),
+    String(tomorrow.getDate()).padStart(2, "0"),
+  ].join("-");
+
   const defaultReportFilter: ReportFilter = {
     shipmentState: 3,
     startTime: formatRaw(`${date}T08:00`),
-    endTime: formatRaw(`${date}T10:00`),
+    endTime: formatRaw(`${nextDate}T10:00`),
   };
 
 
