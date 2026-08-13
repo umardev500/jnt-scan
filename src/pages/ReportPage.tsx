@@ -16,10 +16,23 @@ export default function ReportPage() {
   // =========================
   const { apiUrl, setApiUrl } = useApi();
 
+  const now = new Date();
+
+  const formatDate = (date: Date) =>
+    [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0"),
+    ].join("-");
+
+  const today = new Date(now);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   const defaultReportFilter: ReportFilter = {
     shipmentState: 3,
-    startTime: formatRaw("2026-08-12T08:00"),
-    endTime: formatRaw("2026-08-13T10:00"),
+    startTime: formatRaw(`${formatDate(today)}T08:00`),
+    endTime: formatRaw(`${formatDate(tomorrow)}T10:00`),
   };
 
 
