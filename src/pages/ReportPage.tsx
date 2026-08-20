@@ -244,7 +244,7 @@ export default function ReportPage() {
                   </p>
                 </div>
               </div>
-              
+
               {/* API CONNECTION */}
               <div className="flex w-full max-w-3xl flex-col gap-2 sm:flex-row">
                 <div className="relative flex-1">
@@ -469,6 +469,15 @@ export default function ReportPage() {
         onClose={() => setShowVehicleModal(false)}
         results={vehicleResults}
       />
+
+
+      <div className="mb-4 border-t border-gray-100 px-4 py-5 text-center font-['Roboto']">
+        <p className="text-sm font-medium text-gray-400">
+          © 2026 <span className="text-gray-600">Umar</span>
+          <span className="mx-2 text-gray-300">•</span>
+          All rights reserved.
+        </p>
+      </div>
     </div>
   );
 }
