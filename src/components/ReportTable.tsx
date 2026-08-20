@@ -342,7 +342,7 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className={`border border-gray-200 px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
+                  className={`border border-gray-200 px-6 py-2.5 text-sm text-gray-700 whitespace-nowrap ${cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
                     } ${cell.column.id === "action"
                       ? "sticky right-0 bg-white z-10"
                       : ""
