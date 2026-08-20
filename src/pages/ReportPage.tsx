@@ -252,10 +252,10 @@ export default function ReportPage() {
           {/* FILTER BAR */}
           <div className="border-b border-gray-200 bg-white p-4 shadow-sm md:sticky md:top-0 md:z-30">
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+              <div className="flex flex-wrap items-end gap-3 xl:flex-nowrap">
 
                 {/* Shipment Name */}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Shipment Name
                   </label>
@@ -265,13 +265,13 @@ export default function ReportPage() {
                     name="shipmentName"
                     value={filters.shipmentName || ""}
                     onChange={handleChange}
-                    placeholder="Enter shipment name"
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    placeholder="Shipment name"
+                    className="w-full min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm uppercase outline-none focus:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
 
                 {/* Shipment State */}
-                <div className="min-w-0">
+                <div className="w-full sm:w-44 xl:w-44 xl:shrink-0">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Shipment State
                   </label>
@@ -280,7 +280,7 @@ export default function ReportPage() {
                     name="shipmentState"
                     value={filters.shipmentState}
                     onChange={handleChange}
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value={1}>Terjadwal</option>
                     <option value={2}>Menunggu Proses</option>
@@ -291,7 +291,7 @@ export default function ReportPage() {
                 </div>
 
                 {/* Driver */}
-                <div className="min-w-0">
+                <div className="w-full sm:w-40 xl:w-40 xl:shrink-0">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Driver
                   </label>
@@ -299,7 +299,7 @@ export default function ReportPage() {
                   <select
                     value={driverFilter}
                     onChange={(e) => setDriverFilter(e.target.value)}
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">All Drivers</option>
                     <option value="TEMBAKAN">TEMBAKAN Only</option>
@@ -308,7 +308,7 @@ export default function ReportPage() {
                 </div>
 
                 {/* Printed */}
-                <div className="min-w-0">
+                <div className="w-full sm:w-36 xl:w-36 xl:shrink-0">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Printed
                   </label>
@@ -316,16 +316,16 @@ export default function ReportPage() {
                   <select
                     value={printedFilter}
                     onChange={(e) => setPrintedFilter(e.target.value)}
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">All</option>
-                    <option value="UNPRINTED">Unprinted Only</option>
-                    <option value="PRINTED">Printed Only</option>
+                    <option value="UNPRINTED">Unprinted</option>
+                    <option value="PRINTED">Printed</option>
                   </select>
                 </div>
 
                 {/* Start Time */}
-                <div className="min-w-0">
+                <div className="w-full sm:w-48 xl:w-48 xl:shrink-0">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Start Time
                   </label>
@@ -335,12 +335,12 @@ export default function ReportPage() {
                     name="startTime"
                     value={filters.startTime}
                     onChange={handleChange}
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
 
                 {/* End Time */}
-                <div className="min-w-0">
+                <div className="w-full sm:w-48 xl:w-48 xl:shrink-0">
                   <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     End Time
                   </label>
@@ -350,29 +350,29 @@ export default function ReportPage() {
                     name="endTime"
                     value={filters.endTime}
                     onChange={handleChange}
-                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
-              </div>
 
-              {/* ACTIONS */}
-              <div className="mt-4 flex flex-col gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
+                {/* Actions */}
+                <div className="flex w-full gap-2 sm:w-auto xl:shrink-0">
+                  <button
+                    type="submit"
+                    className="h-[38px] flex-1 rounded-lg bg-blue-600 px-5 text-sm font-medium text-white hover:bg-blue-700 sm:flex-none"
+                  >
+                    Search
+                  </button>
 
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                >
-                  Search
-                </button>
+                  <button
+                    type="button"
+                    onClick={handleCheckVehicle}
+                    disabled={checkingVehicle}
+                    className="h-[38px] flex-1 whitespace-nowrap rounded-lg bg-green-600 px-5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 sm:flex-none"
+                  >
+                    {checkingVehicle ? "Checking..." : "Check Vehicle"}
+                  </button>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleCheckVehicle}
-                  disabled={checkingVehicle}
-                  className="inline-flex items-center justify-center rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
-                </button>
               </div>
             </form>
           </div>
