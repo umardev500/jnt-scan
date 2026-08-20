@@ -209,35 +209,95 @@ export default function ReportPage() {
       {/* =========================
           HEADER + API INPUT FORM
           ========================= */}
+
       <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-[1700px] px-6 py-6 flex flex-col gap-4">
+        <div className="mx-auto max-w-[1700px] px-6 py-5">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
 
-          {/* TITLE */}
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-800">
-              Report Dashboard v2
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Shipment overview and operational data
-            </p>
-          </div>
+            {/* LEFT: TITLE + API */}
+            <div className="min-w-0">
+              {/* TITLE */}
+              <div className="mb-4 flex items-center gap-3">
+                {/* LOGO */}
+                <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 shadow-md shadow-purple-200/50">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent" />
 
-          {/* API URL FORM */}
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={apiUrl}
-              onChange={(e) => setApiUrl(e.target.value)}
-              placeholder="Enter API URL (e.g. https://api.example.com)"
-              className="w-105 rounded border px-3 py-2 text-sm"
-            />
+                  <span className="relative text-base font-bold text-white">
+                    R
+                  </span>
+                </div>
 
-            <button
-              onClick={() => console.log("API URL set:", apiUrl)}
-              className="rounded bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-900 text-nowrap"
-            >
-              Set URL
-            </button>
+                {/* TITLE */}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+                      Report Dashboard
+                    </h1>
+
+                    <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+                      v2
+                    </span>
+                  </div>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    Shipment overview and operational data
+                  </p>
+                </div>
+              </div>
+              
+              {/* API CONNECTION */}
+              <div className="flex w-full max-w-3xl flex-col gap-2 sm:flex-row">
+                <div className="relative flex-1">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">
+                    API
+                  </span>
+
+                  <input
+                    type="text"
+                    value={apiUrl}
+                    onChange={(e) => setApiUrl(e.target.value)}
+                    placeholder="https://api.example.com"
+                    className="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-12 pr-3 text-sm text-gray-700 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-gray-400 focus:bg-white focus:ring-2 focus:ring-gray-100"
+                  />
+                </div>
+
+                <button
+                  onClick={() => console.log("API URL set:", apiUrl)}
+                  className="h-10 rounded-lg bg-gray-900 px-5 text-sm font-medium text-white transition hover:bg-gray-800 active:bg-gray-950"
+                >
+                  Connect
+                </button>
+              </div>
+            </div>
+
+            {/* RIGHT: DEVELOPER */}
+            <div className="flex items-center gap-3 border-t border-gray-100 pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+              {/* Avatar */}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+                U
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-gray-900">
+                  Umar
+                </p>
+
+                <p className="text-xs text-gray-500">
+                  Software Engineer · Tech Enthusiast
+                </p>
+
+                <a
+                  href="https://umardev500.github.io/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition hover:text-gray-700"
+                >
+                  Portfolio
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
