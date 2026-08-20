@@ -86,9 +86,11 @@ export default function ReportPage() {
   } = useReport(appliedFilters);
 
   const [driverFilter, setDriverFilter] = useState("");
+  const [printedFilter, setPrintedFilter] = useState("");
 
   const filteredData = data.filter((item) => {
     const driverName = item.driverName.trim().toUpperCase();
+    const isPrinted = printedList.includes(item.shipmentNo);
 
     if (driverFilter === "TEMBAKAN") {
       return driverName === "TEMBAKAN";
@@ -97,6 +99,16 @@ export default function ReportPage() {
     if (driverFilter === "EXCLUDE_TEMBAKAN") {
       return driverName !== "TEMBAKAN";
     }
+
+    // Printed filter
+    if (printedFilter === "PRINTED") {
+      if (!isPrinted) return false;
+    }
+
+    if (printedFilter === "UNPRINTED") {
+      if (isPrinted) return false;
+    }
+
 
     return true;
   });
@@ -238,35 +250,37 @@ export default function ReportPage() {
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
 
           {/* FILTER BAR */}
-          <div className="md:sticky md:top-0 md:z-30 border-b border-gray-200 bg-white p-4 shadow-sm">
+          <div className="border-b border-gray-200 bg-white p-4 shadow-sm md:sticky md:top-0 md:z-30">
             <form onSubmit={handleSubmit}>
-              <div className="flex flex-wrap gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
 
                 {/* Shipment Name */}
-                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Shipment Name
                   </label>
+
                   <input
                     type="text"
                     name="shipmentName"
                     value={filters.shipmentName || ""}
                     onChange={handleChange}
                     placeholder="Enter shipment name"
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm uppercase"
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm uppercase outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
 
                 {/* Shipment State */}
-                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Shipment State
                   </label>
+
                   <select
                     name="shipmentState"
                     value={filters.shipmentState}
                     onChange={handleChange}
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value={1}>Terjadwal</option>
                     <option value={2}>Menunggu Proses</option>
@@ -276,16 +290,16 @@ export default function ReportPage() {
                   </select>
                 </div>
 
-                {/* Driver Filter */}
-                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                {/* Driver */}
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Driver
                   </label>
 
                   <select
                     value={driverFilter}
                     onChange={(e) => setDriverFilter(e.target.value)}
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">All Drivers</option>
                     <option value="TEMBAKAN">TEMBAKAN Only</option>
@@ -293,56 +307,72 @@ export default function ReportPage() {
                   </select>
                 </div>
 
+                {/* Printed */}
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
+                    Printed
+                  </label>
+
+                  <select
+                    value={printedFilter}
+                    onChange={(e) => setPrintedFilter(e.target.value)}
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  >
+                    <option value="">All</option>
+                    <option value="UNPRINTED">Unprinted Only</option>
+                    <option value="PRINTED">Printed Only</option>
+                  </select>
+                </div>
+
                 {/* Start Time */}
-                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     Start Time
                   </label>
+
                   <input
                     type="datetime-local"
                     name="startTime"
                     value={filters.startTime}
                     onChange={handleChange}
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm"
-                    style={{ minWidth: "195px" }}
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
 
                 {/* End Time */}
-                <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1">
-                  <label className="text-xs text-gray-500 sm:mr-2 sm:whitespace-nowrap">
+                <div className="min-w-0">
+                  <label className="mb-1.5 block text-xs font-medium text-gray-600">
                     End Time
                   </label>
+
                   <input
                     type="datetime-local"
                     name="endTime"
                     value={filters.endTime}
                     onChange={handleChange}
-                    className="mt-1 sm:mt-0 w-full sm:w-40 rounded border px-3 py-2 text-sm min-w-43.75"
-                    style={{ minWidth: "195px" }}
+                    className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
+              </div>
 
-                <div className="w-full sm:w-auto flex justify-center sm:justify-start">
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
-                  >
-                    Search
-                  </button>
+              {/* ACTIONS */}
+              <div className="mt-4 flex flex-col gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
 
-                  &nbsp;&nbsp;
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                >
+                  Search
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={handleCheckVehicle}
-                    disabled={checkingVehicle}
-                    className="w-full sm:w-auto rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:opacity-50"
-                  >
-                    {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
-                  </button>
-                </div>
-
+                <button
+                  type="button"
+                  onClick={handleCheckVehicle}
+                  disabled={checkingVehicle}
+                  className="inline-flex items-center justify-center rounded-lg bg-green-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {checkingVehicle ? "Checking..." : "Check Vehicle Type"}
+                </button>
               </div>
             </form>
           </div>
