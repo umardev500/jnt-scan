@@ -279,7 +279,7 @@ export default function ReportPage() {
 
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-gray-900">
-                  Umar
+                  Umar Schweinsteiger
                 </p>
 
                 <p className="text-xs text-gray-500">
