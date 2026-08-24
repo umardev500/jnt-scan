@@ -90,7 +90,13 @@ export default function ReportPage() {
 
   const filteredData = data.filter((item) => {
     const driverName = item.driverName.trim().toUpperCase();
+    const plateNumber = item.plateNumber.trim().toUpperCase();
     const isPrinted = printedList.includes(item.shipmentNo);
+
+    // Always include this plate number
+    if (plateNumber === "B1234HQ") {
+      return true;
+    }
 
     if (driverFilter === "TEMBAKAN") {
       return driverName === "TEMBAKAN";
@@ -109,10 +115,8 @@ export default function ReportPage() {
       if (isPrinted) return false;
     }
 
-
     return true;
   });
-
   // =========================
   // INPUT CHANGE (NO FETCH)
   // =========================
