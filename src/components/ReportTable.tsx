@@ -270,8 +270,8 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
                 }
               }}
               className={`rounded w-8 h-8 text-xs font-medium text-white ${added
-                  ? "bg-red-700 hover:bg-red-800"
-                  : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-red-700 hover:bg-red-800"
+                : "bg-blue-600 hover:bg-blue-700"
                 }`}
             >
               {added ? "⃠" : "✓"}
@@ -298,15 +298,18 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
     state === "desc" ? "text-blue-600" : "text-gray-300";
 
   return (
-    <div className="overflow-x-auto border border-gray-300 bg-white">
+    <div className="overflow-x-auto border border-gray-300 bg-white dark:border-gray-800 dark:bg-gray-900">
       <table className="min-w-full table-auto border-collapse">
-        <thead className="bg-gray-100">
+
+        {/* HEADER */}
+        <thead className="bg-gray-100 dark:bg-gray-800">
           {table.getHeaderGroups().map((hg) => (
             <tr key={hg.id}>
               {hg.headers.map((header) => {
                 const sortState = header.column.getIsSorted();
                 const isNumberCol = header.id === "rowNumber";
                 const isActionCol = header.id === "action";
+
                 return (
                   <th
                     key={header.id}
@@ -315,15 +318,56 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
                         ? header.column.getToggleSortingHandler()
                         : undefined
                     }
-                    className={`border border-gray-300 px-6 py-3 text-left text-sm font-semibold text-gray-700 text-nowrap ${header.column.getCanSort() ? "cursor-pointer" : "cursor-default"
-                      } ${isNumberCol ? "sticky left-0 bg-gray-100 z-20" : ""} ${isActionCol ? "sticky right-0 bg-gray-100 z-20" : ""} ${isActionCol ? "hidden lg:table-cell" : ""}`}
+                    className={`
+                  border
+                  border-gray-300
+                  px-6
+                  py-3
+                  text-left
+                  text-sm
+                  font-semibold
+                  text-gray-700
+                  text-nowrap
+                  transition-colors
+
+                  dark:border-gray-700
+                  dark:text-gray-200
+
+                  ${header.column.getCanSort()
+                        ? "cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                        : "cursor-default"
+                      }
+
+                  ${isNumberCol
+                        ? "sticky left-0 z-20 bg-gray-100 dark:bg-gray-800"
+                        : ""
+                      }
+
+                  ${isActionCol
+                        ? "sticky right-0 z-20 bg-gray-100 dark:bg-gray-800"
+                        : ""
+                      }
+
+                  ${isActionCol
+                        ? "hidden lg:table-cell"
+                        : ""
+                      }
+                `}
                   >
                     <div className="flex items-center gap-2">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+
                       {header.column.getCanSort() && (
                         <span className="flex flex-col text-[10px] leading-none">
-                          <span className={getUpColor(sortState as any)}>▲</span>
-                          <span className={getDownColor(sortState as any)}>▼</span>
+                          <span className={getUpColor(sortState as any)}>
+                            ▲
+                          </span>
+                          <span className={getDownColor(sortState as any)}>
+                            ▼
+                          </span>
                         </span>
                       )}
                     </div>
@@ -333,30 +377,80 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
             </tr>
           ))}
         </thead>
-        <tbody>
+
+        {/* BODY */}
+        <tbody className="bg-white dark:bg-gray-900">
           {table.getRowModel().rows.map((row, idx) => (
             <tr
               key={row.id}
-              className="border border-gray-200 transition-colors duration-150 hover:bg-gray-100"
+              className="
+            border
+            border-gray-200
+            transition-colors
+            duration-150
+
+            hover:bg-gray-100
+
+            dark:border-gray-800
+            dark:hover:bg-gray-800/70
+          "
             >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className={`border border-gray-200 px-6 py-2.5 text-sm text-gray-700 whitespace-nowrap ${cell.column.id === "rowNumber" ? "sticky left-0 bg-gray-50 z-10" : ""
-                    } ${cell.column.id === "action"
-                      ? "sticky right-0 bg-white z-10"
-                      : ""
-                    } ${cell.column.id === "action" ? "hidden lg:table-cell" : ""}`}
-                >
-                  {cell.column.id === "rowNumber"
-                    ? idx + 1 // COUNTER OUTSIDE DATA, safe for filtered/sorted
-                    : flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                const isNumberCol = cell.column.id === "rowNumber";
+                const isActionCol = cell.column.id === "action";
+
+                return (
+                  <td
+                    key={cell.id}
+                    className={`
+                  border
+                  border-gray-200
+                  px-6
+                  py-2.5
+                  text-sm
+                  text-gray-700
+                  whitespace-nowrap
+                  transition-colors
+
+                  dark:border-gray-800
+                  dark:text-gray-300
+
+                  ${isNumberCol
+                        ? "sticky left-0 z-10 bg-gray-50 dark:bg-gray-900"
+                        : ""
+                      }
+
+                  ${isActionCol
+                        ? "sticky right-0 z-10 bg-white dark:bg-gray-900"
+                        : ""
+                      }
+
+                  ${isActionCol
+                        ? "hidden lg:table-cell"
+                        : ""
+                      }
+
+                  ${!isNumberCol && !isActionCol
+                        ? "dark:bg-gray-900"
+                        : ""
+                      }
+                `}
+                  >
+                    {isNumberCol
+                      ? idx + 1
+                      : flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
+
       </table>
     </div>
+
   );
 }
