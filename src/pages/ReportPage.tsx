@@ -10,6 +10,7 @@ import type { RecordItem, VehicleCheckPayload, VehicleCheckResult } from "../typ
 import VehicleCheckModal from "../components/VehicleModal";
 import useDarkMode from "../hooks/useDarkMode";
 
+type BulkAction = "check" | "uncheck" | null;
 
 export default function ReportPage() {
   // =========================
@@ -121,6 +122,12 @@ export default function ReportPage() {
 
     return true;
   });
+
+  const [bulkAction, setBulkAction] = useState<BulkAction>(null);
+  const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+
+  const [bulkActionData, setBulkActionData] = useState<RecordItem[]>([])
+
   // =========================
   // INPUT CHANGE (NO FETCH)
   // =========================
@@ -209,6 +216,58 @@ export default function ReportPage() {
       JSON.stringify(printedList)
     );
   }, [printedList]);
+
+  const openCheckAllConfirmation = () => {
+    const uncheckedItems = filteredData.filter(
+      (item) => !printedList.includes(item.shipmentNo)
+    );
+
+    if (uncheckedItems.length === 0) return;
+
+    setBulkActionData(uncheckedItems);
+    setBulkAction("check");
+    setShowBulkConfirm(true);
+  };
+
+  const openUncheckAllConfirmation = () => {
+    const checkedItems = filteredData.filter(
+      (item) => printedList.includes(item.shipmentNo)
+    );
+
+    if (checkedItems.length === 0) return;
+
+    setBulkActionData(checkedItems);
+    setBulkAction("uncheck");
+    setShowBulkConfirm(true);
+  };
+
+  const handleConfirmBulkAction = () => {
+    if (bulkAction === "check") {
+      setPrintedList((prev) => {
+        const existing = new Set(prev);
+
+        bulkActionData.forEach((item) => {
+          existing.add(item.shipmentNo);
+        });
+
+        return Array.from(existing);
+      });
+    }
+
+    if (bulkAction === "uncheck") {
+      const shipmentNos = new Set(
+        bulkActionData.map((item) => item.shipmentNo)
+      );
+
+      setPrintedList((prev) =>
+        prev.filter((shipmentNo) => !shipmentNos.has(shipmentNo))
+      );
+    }
+
+    setShowBulkConfirm(false);
+    setBulkAction(null);
+    setBulkActionData([]);
+  };
 
 
   return (
@@ -769,69 +828,220 @@ export default function ReportPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex w-full gap-2 sm:w-auto xl:shrink-0">
+                {/* ACTIONS */}
+                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
 
-                  {/* Search */}
+                  {/* Primary action */}
                   <button
                     type="submit"
                     className="
-                h-[38px]
-                flex-1
-                rounded-lg
-                bg-blue-600
-                px-5
-                text-sm
-                font-medium
-                text-white
-                transition
-
-                hover:bg-blue-700
-                active:bg-blue-800
-
-                dark:bg-blue-600
-                dark:hover:bg-blue-500
-                dark:active:bg-blue-700
-
-                sm:flex-none
-              "
+      inline-flex h-10 items-center justify-center gap-2
+      rounded-lg
+      bg-blue-600
+      px-5
+      text-sm font-semibold text-white
+      shadow-sm
+      transition
+      hover:bg-blue-700
+      active:bg-blue-800
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500/30
+      dark:bg-blue-600
+      dark:hover:bg-blue-500
+    "
                   >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="h-4 w-4"
+                    >
+                      <path d="m21 21-4.35-4.35" />
+                      <circle cx="11" cy="11" r="6" />
+                    </svg>
+
                     Search
                   </button>
 
-                  {/* Check Vehicle */}
+                  {/* Bulk actions */}
+                  <div
+                    className="
+      flex items-center
+      rounded-lg
+      border border-gray-200
+      bg-gray-50
+      p-1
+      dark:border-gray-700
+      dark:bg-gray-950
+    "
+                  >
+                    <button
+                      type="button"
+                      onClick={openCheckAllConfirmation}
+                      disabled={filteredData.length === 0}
+                      title={`Check all ${filteredData.length} filtered rows`}
+                      className="
+        inline-flex h-8 items-center justify-center gap-1.5
+        rounded-md
+        px-3
+        text-xs font-medium
+        text-emerald-700
+        transition
+        hover:bg-emerald-100
+        disabled:cursor-not-allowed
+        disabled:opacity-40
+        dark:text-emerald-400
+        dark:hover:bg-emerald-500/10
+      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-4 w-4"
+                      >
+                        <path d="m5 12 4 4L19 6" />
+                      </svg>
+
+                      Check All
+
+                      <span
+                        className="
+          rounded-full
+          bg-emerald-100
+          px-1.5 py-0.5
+          text-[10px] font-semibold
+          text-emerald-700
+          dark:bg-emerald-500/15
+          dark:text-emerald-400
+        "
+                      >
+                        {filteredData.length}
+                      </span>
+                    </button>
+
+                    <div className="h-5 w-px bg-gray-200 dark:bg-gray-700" />
+
+                    <button
+                      type="button"
+                      onClick={openUncheckAllConfirmation}
+                      disabled={filteredData.length === 0}
+                      title={`Uncheck all ${filteredData.length} filtered rows`}
+                      className="
+        inline-flex h-8 items-center justify-center gap-1.5
+        rounded-md
+        px-3
+        text-xs font-medium
+        text-gray-600
+        transition
+        hover:bg-white
+        hover:text-gray-900
+        disabled:cursor-not-allowed
+        disabled:opacity-40
+        dark:text-gray-400
+        dark:hover:bg-gray-800
+        dark:hover:text-gray-200
+      "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-4 w-4"
+                      >
+                        <path d="M6 12h12" />
+                      </svg>
+
+                      Uncheck
+                    </button>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="hidden h-8 w-px bg-gray-200 sm:block dark:bg-gray-700" />
+
+                  {/* Vehicle check */}
                   <button
                     type="button"
                     onClick={handleCheckVehicle}
-                    disabled={checkingVehicle}
+                    disabled={checkingVehicle || filteredData.length === 0}
                     className="
-                h-[38px]
-                flex-1
-                whitespace-nowrap
-                rounded-lg
-                bg-green-600
-                px-5
-                text-sm
-                font-medium
-                text-white
-                transition
+                    inline-flex h-10 items-center justify-center gap-2
+                    rounded-lg
+                    border border-green-200
+                    bg-green-50
+                    px-4
+                    text-sm font-medium
+                    text-green-700
+                    transition
+                    hover:border-green-300
+                    hover:bg-green-100
+                    active:bg-green-200
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-green-500/20
 
-                hover:bg-green-700
-                active:bg-green-800
-
-                disabled:cursor-not-allowed
-                disabled:opacity-50
-
-                dark:bg-green-600
-                dark:hover:bg-green-500
-                dark:active:bg-green-700
-
-                sm:flex-none
-              "
+                    dark:border-green-900
+                    dark:bg-green-950/40
+                    dark:text-green-400
+                    dark:hover:bg-green-950/70
+                  "
                   >
-                    {checkingVehicle ? "Checking..." : "Check Vehicle"}
+                    {checkingVehicle ? (
+                      <>
+                        <svg
+                          className="h-4 w-4 animate-spin"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                          />
+                        </svg>
+
+                        Checking...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="h-4 w-4"
+                        >
+                          <path d="M12 3v18" />
+                          <path d="M3 12h18" />
+                          <circle cx="12" cy="12" r="9" />
+                        </svg>
+
+                        Check Vehicle
+                      </>
+                    )}
                   </button>
 
                 </div>
+
               </div>
             </form>
           </div>
@@ -905,6 +1115,296 @@ export default function ReportPage() {
           All rights reserved.
         </p>
       </div>
+
+
+      {showBulkConfirm && (
+        <div
+          className="
+      fixed inset-0 z-50
+      flex items-center justify-center
+      bg-black/50
+      p-4
+      backdrop-blur-sm
+    "
+          onClick={() => setShowBulkConfirm(false)}
+        >
+          <div
+            className="
+        w-full max-w-3xl
+        overflow-hidden
+        rounded-2xl
+        border border-gray-200
+        bg-white
+        shadow-2xl
+
+        dark:border-gray-700
+        dark:bg-gray-900
+      "
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* HEADER */}
+            <div className="border-b border-gray-200 px-6 py-5 dark:border-gray-800">
+              <div className="flex items-start justify-between gap-4">
+
+                <div className="flex items-start gap-3">
+
+                  {/* Icon */}
+                  <div
+                    className={`
+                flex h-10 w-10 shrink-0 items-center justify-center
+                rounded-full
+
+                ${bulkAction === "check"
+                        ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                        : "bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400"
+                      }
+              `}
+                  >
+                    {bulkAction === "check" ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-5 w-5"
+                      >
+                        <path d="m5 12 4 4L19 6" />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-5 w-5"
+                      >
+                        <path d="M6 12h12" />
+                      </svg>
+                    )}
+                  </div>
+
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {bulkAction === "check"
+                        ? "Check filtered shipments?"
+                        : "Uncheck filtered shipments?"}
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      You are about to{" "}
+                      <span className="font-medium text-gray-700 dark:text-gray-200">
+                        {bulkAction === "check" ? "check" : "uncheck"}
+                      </span>{" "}
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {bulkActionData.length}
+                      </span>{" "}
+                      filtered shipment
+                      {bulkActionData.length !== 1 ? "s" : ""}.
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Close */}
+                <button
+                  type="button"
+                  onClick={() => setShowBulkConfirm(false)}
+                  className="
+              rounded-lg p-2
+              text-gray-400
+              transition
+              hover:bg-gray-100
+              hover:text-gray-600
+
+              dark:hover:bg-gray-800
+              dark:hover:text-gray-300
+            "
+                  aria-label="Close"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="h-5 w-5"
+                  >
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6 6 18" />
+                  </svg>
+                </button>
+
+              </div>
+            </div>
+
+            {/* SUMMARY */}
+            <div className="bg-gray-50 px-6 py-3 dark:bg-gray-950">
+              <div className="flex items-center justify-between">
+
+                <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Affected shipments
+                </span>
+
+                <span
+                  className={`
+              rounded-full
+              px-2.5 py-1
+              text-xs font-semibold
+
+              ${bulkAction === "check"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      : "bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400"
+                    }
+            `}
+                >
+                  {bulkActionData.length} rows
+                </span>
+
+              </div>
+            </div>
+
+            {/* DATA LIST */}
+            <div className="max-h-[420px] overflow-y-auto">
+
+              {bulkActionData.map((item, index) => (
+                <div
+                  key={item.shipmentNo}
+                  className="
+              border-b border-gray-100
+              px-6 py-3
+              last:border-b-0
+              hover:bg-gray-50
+
+              dark:border-gray-800
+              dark:hover:bg-gray-800/50
+            "
+                >
+                  <div className="flex items-center gap-4">
+
+                    {/* Number */}
+                    <div className="w-7 shrink-0 text-xs text-gray-400">
+                      {index + 1}
+                    </div>
+
+                    {/* Shipment */}
+                    <div className="min-w-0 flex-1">
+
+                      <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                        {item.shipmentNo}
+                      </p>
+
+                      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <span>
+                          Driver:{" "}
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            {item.driverName || "-"}
+                          </span>
+                        </span>
+
+                        <span>
+                          Plate:{" "}
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            {item.plateNumber || "-"}
+                          </span>
+                        </span>
+                      </div>
+
+                    </div>
+
+                    {/* Action indicator */}
+                    <div
+                      className={`
+                  hidden shrink-0 rounded-md px-2 py-1
+                  text-[11px] font-medium
+                  sm:block
+
+                  ${bulkAction === "check"
+                          ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                          : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400"
+                        }
+                `}
+                    >
+                      {bulkAction === "check" ? "Will check" : "Will uncheck"}
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+
+            </div>
+
+            {/* FOOTER */}
+            <div
+              className="
+          flex flex-col-reverse gap-2
+          border-t border-gray-200
+          bg-white
+          px-6 py-4
+
+          sm:flex-row
+          sm:justify-end
+
+          dark:border-gray-800
+          dark:bg-gray-900
+        "
+            >
+
+              <button
+                type="button"
+                onClick={() => setShowBulkConfirm(false)}
+                className="
+            h-10
+            rounded-lg
+            border border-gray-300
+            bg-white
+            px-5
+            text-sm font-medium
+            text-gray-700
+            transition
+
+            hover:bg-gray-50
+            active:bg-gray-100
+
+            dark:border-gray-700
+            dark:bg-gray-900
+            dark:text-gray-200
+            dark:hover:bg-gray-800
+          "
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmBulkAction}
+                className={`
+            h-10
+            rounded-lg
+            px-5
+            text-sm font-semibold
+            text-white
+            transition
+
+            ${bulkAction === "check"
+                    ? "bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800"
+                    : "bg-red-600 hover:bg-red-700 active:bg-red-800"
+                  }
+          `}
+              >
+                {bulkAction === "check"
+                  ? `Check ${bulkActionData.length} Shipments`
+                  : `Uncheck ${bulkActionData.length} Shipments`}
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
