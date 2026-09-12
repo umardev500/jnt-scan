@@ -533,30 +533,31 @@ export default function ReportPage() {
       <div className="mx-auto max-w-[1700px] px-6 py-6">
 
         <div className="
-    overflow-hidden
-    rounded-xl
-    border border-gray-200
-    bg-white
-    shadow-sm
-    transition-colors
-    dark:border-gray-800
-    dark:bg-gray-900
-  ">
+            rounded-xl
+            border border-gray-200
+            bg-white
+            shadow-sm
+            transition-colors
+            dark:border-gray-800
+            dark:bg-gray-900
+          ">
+
 
           {/* FILTER BAR */}
           <div className="
-      border-b border-gray-200
-      bg-white
-      p-4
-      shadow-sm
+          border-b border-gray-200
+          bg-white
+          p-4
+          shadow-sm
 
-      md:sticky
-      md:top-0
-      md:z-30
+          sticky
+          top-0
+          z-30
 
-      dark:border-gray-800
-      dark:bg-gray-900
-    ">
+          dark:border-gray-800
+          dark:bg-gray-900
+        ">
+
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap items-end gap-3 xl:flex-nowrap">
 
@@ -749,6 +750,7 @@ export default function ReportPage() {
 
                   <input
                     type="datetime-local"
+                    lang="en-GB"
                     name="startTime"
                     value={filters.startTime}
                     onChange={handleChange}
