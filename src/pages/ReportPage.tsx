@@ -545,18 +545,18 @@ export default function ReportPage() {
 
           {/* FILTER BAR */}
           <div className="
-          border-b border-gray-200
-          bg-white
-          p-4
-          shadow-sm
+            border-b border-gray-200
+            bg-white  
+            p-4
+            shadow-sm
 
-          sticky
-          top-0
-          z-30
+            lg:sticky
+            lg:top-0
+            lg:z-30
 
-          dark:border-gray-800
-          dark:bg-gray-900
-        ">
+            dark:border-gray-800
+            dark:bg-gray-900
+          ">
 
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap items-end gap-3 xl:flex-nowrap">
