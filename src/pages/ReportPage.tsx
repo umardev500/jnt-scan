@@ -1078,23 +1078,61 @@ export default function ReportPage() {
             {/* Error */}
             {error && (
               <div className="
-          rounded-lg
-          p-4
-          text-sm
-          text-red-500
+                rounded-lg
+                p-4
+                text-sm
+                text-red-500
 
-          dark:text-red-400
-        ">
+                dark:text-red-400
+              ">
                 {error}
               </div>
             )}
 
-            <ReportTable
-              printedList={printedList}
-              data={filteredData || []}
-              onAddToPrintedList={handleAddToPrintedList}
-              onRemoveFromPrintedList={handleRemoveFromPrintedList}
-            />
+            {!loading && !error && filteredData.length === 0 ? (
+              <div className="flex min-h-[320px] flex-col items-center justify-center px-6 py-12 text-center">
+                <div className="
+                  mb-4 flex h-14 w-14 items-center justify-center
+                  rounded-full
+                  bg-gray-100
+                  text-gray-400
+                  dark:bg-gray-800
+                  dark:text-gray-500
+                ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    className="h-7 w-7"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v5" />
+                    <path d="M14 11v5" />
+                  </svg>
+                </div>
+
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                  No Data Found
+                </h3>
+
+                <p className="mt-1 max-w-md text-sm text-gray-500 dark:text-gray-400">
+                  No shipment data matches the current filters.
+                  Try changing the shipment state, driver, or date range.
+                </p>
+              </div>
+            ) : (
+              <ReportTable
+                printedList={printedList}
+                data={filteredData}
+                onAddToPrintedList={handleAddToPrintedList}
+                onRemoveFromPrintedList={handleRemoveFromPrintedList}
+              />
+            )}
+
 
           </div>
 

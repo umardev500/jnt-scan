@@ -8,6 +8,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { useState, useMemo } from "react";
+import { formatDateTime24 } from "../helpers/time";
 
 interface Props {
   data: RecordItem[];
@@ -126,7 +127,7 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
           if (isCompleted) {
             return (
               <span className="inline-block bg-green-100 text-green-800 px-2 py-0.5 rounded-lg text-sm">
-                {new Date(planned).toLocaleString()}
+                {formatDateTime24(planned)}
               </span>
             );
           }
@@ -147,7 +148,7 @@ export default function ReportTable({ data, printedList, onAddToPrintedList, onR
                       : "bg-gray-100 text-gray-700"
                 }`}
             >
-              {new Date(planned).toLocaleString()}
+              {formatDateTime24(planned)}
             </span>
           );
         },
